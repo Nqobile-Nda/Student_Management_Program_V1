@@ -21,7 +21,7 @@ def add_student_route():
         student_subjects = request.form.get("student_subjects")
         created_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
-        if student_name:
+        if student_name and student_date_of_birth and student_grade and student_subjects:
             flash(f"{student_name} has been added.", "success")
             create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
             return redirect(url_for("add_student_route"))
