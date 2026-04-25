@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, get_flashed_messages
+from flask import Flask, render_template, request, flash, get_flashed_messages, redirect, url_for
 from models.students import students_table, load_students, create_student, update_student_details, delete_student
 import os
 from dotenv import load_dotenv
@@ -24,8 +24,9 @@ def add_student_route():
         if student_name:
             flash(f"{student_name} has been added.", "success")
             create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
+            return redirect(url_for("add_student_route"))
         else: 
-            flash(f"No nam entered", "error")
+            flash(f"No name entered", "error")
 
     return render_template("add_student.html", students=students)
 
