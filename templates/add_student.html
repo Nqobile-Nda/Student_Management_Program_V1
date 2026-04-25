@@ -13,8 +13,8 @@
     <input type="number" name="student_grade" title="student_grade">
 
     <label>Subjects</label>
-    <select name="student_subjects" title="student_subjects">
-        <option readonly>Select Subjects</option>
+    <select name="student_subjects" title="student_subjects" required>
+        <option value="" selected disabled>Select Subjects</option>
         <option>English</option>
         <option>Mathematics</option>
         <option>Afrikaans</option>
@@ -31,6 +31,8 @@
         <td>Grade</td>
         <td>Subjects</td>
         <td>Created At</td>
+        <td>Edit</td>
+        <td>Delete</td>
     </thead>
     <tbody>
         {% for student in students %}
@@ -41,6 +43,8 @@
             <td>{{ student.grade }}</td>
             <td>{{ student.subjects }}</td>
             <td>{{ student.created_at }}</td>
+            <td><a href="{{ url_for('edit_student_details_route', student_id=student.student_id) }}">Edit</a></td>
+            <td><a href="{{ url_for('delete_student_route', student_id=student.student_id) }}">Delete</a></td>
         </tr>
         {% endfor %}
     </tbody>

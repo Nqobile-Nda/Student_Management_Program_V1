@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="POST">
+    <label>Student ID:</label>
+    <input value="{{ student.student_id }}" title="student_id" readonly><br/>
+
+    <label>Name:</label>
+    <input name="student_name" value="{{ student.name }}" title="name"><br/>
+
+    <label>Date Of Birth:</label>
+    <input name="date_of_birth" type="date" value="{{ student.date_of_birth }}" title="date_of_birth"><br/>
+
+    <label>Grade:</label>
+    <input name="grade" value="{{ student.grade }}" title="grade"><br/>
+
+    <label>Subjects:</label>
+    <input name="subjects" value="{{ student.subjects }}" title="subjects"><br/>
+
+    <label>Created At:</label>
+    <input value="{{ student.created_at }}" title="created_at"><br/>
+
+    <button type="submit">Update</button>
+</form>
+
+{% endblock %}
