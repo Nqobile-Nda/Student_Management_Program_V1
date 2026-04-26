@@ -10,6 +10,8 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY")
 
+students_table()
+
 @app.route("/", methods=["GET", "POST"])
 def add_student_route():
     students = load_students()

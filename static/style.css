@@ -1,0 +1,19 @@
+.flash-container {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+
+.flash-container p {
+    margin: 0px;
+}
+
+
+.success {
+    background-color: rgb(47, 191, 47);
+}
+
+
+.error {
+    background-color: crimson;
+}
