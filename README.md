@@ -1,24 +1,27 @@
 # Student Management Program
 
-A simple Flask application for managing student records in a local SQLite database.
+A small Flask web app for creating, viewing, editing, and deleting student records with SQLite.
+
+## Overview
+
+This project provides a simple student management workflow through a browser-based interface. Student records are stored locally in `student.db`, and the application creates the database table automatically when the app starts.
 
 ## Features
 
-- Add a student with name, date of birth, grade, and subject
-- Edit an existing student record
-- Delete a student record
-- Store records in `student.db`
-- Display saved students in a table on the main page
-- Show flash messages after form submission
-- Return `404` for invalid student edit/delete links
+- Add new students
+- View all students in a table
+- Edit existing student records
+- Delete student records
+- Flash success and error messages
+- Return `404` for invalid student edit or delete links
 
 ## Tech Stack
 
 - Python
 - Flask
 - SQLite
-- Jinja2 templates
-- `python-dotenv` for environment variables
+- Jinja2
+- `python-dotenv`
 
 ## Project Structure
 
@@ -27,68 +30,104 @@ Student_management_program/
 |-- app.py
 |-- models/
 |   `-- students.py
+|-- static/
+|   |-- script.js
+|   `-- style.css
 |-- templates/
 |   |-- add_student.html
-|   |-- edit_student.html
-|   `-- base.html
+|   |-- base.html
+|   `-- edit_student.html
 |-- requirements.txt
 |-- .env
+|-- .gitignore
 `-- student.db
 ```
 
+## Requirements
+
+- Python 3.x
+- `pip`
+
 ## Setup
 
-1. Create and activate a virtual environment.
+1. Clone the repository or open the project folder.
+2. Create a virtual environment:
 
 ```powershell
 python -m venv venv
+```
+
+3. Activate the virtual environment:
+
+```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-2. Install dependencies.
+4. Install dependencies:
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file in the project root.
+5. Create a `.env` file in the project root:
 
 ```env
 SECRET_KEY=your-secret-key
 ```
 
-4. Run the app.
+## Running the App
+
+Start the Flask app with:
 
 ```powershell
 python app.py
 ```
 
-5. Open the local site in your browser.
+Then open:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-## How It Works
+## Routes
 
-- The `/` route displays the student form and the current student list.
-- When the form is submitted, the app saves the record to SQLite.
-- The `/edit/student/<student_id>` route lets you update an existing student.
-- The `/delete/student/<student_id>` route removes a student record.
-- The database table is created automatically if it does not already exist.
-- Invalid edit/delete IDs return a `404` response.
+- `/`
+  Displays the add-student form and the full student list.
+- `/edit/student/<student_id>`
+  Opens the edit page for a student and saves updates.
+- `/delete/student/<student_id>`
+  Deletes the selected student record.
+
+## Data Model
+
+Each student record contains:
+
+- `student_id`
+- `name`
+- `date_of_birth`
+- `grade`
+- `subjects`
+- `created_at`
 
 ## Notes
 
-- The database file `student.db` is local and is ignored by Git.
-- The `.env` file is also ignored by Git and should not be committed.
-- The app uses `SECRET_KEY` from `.env` for Flask flash messages.
-- The subject field requires the user to choose a real subject before submitting the form.
-- The application currently runs with `debug=True` in local development.
+- The app uses a local SQLite database file: `student.db`.
+- `student.db` is ignored by Git.
+- `.env` is ignored by Git and should not be committed.
+- The app currently runs in debug mode for local development.
+- The subject field requires the user to choose a valid subject before submission.
+- Static frontend assets live in the `static/` folder.
+
+## Current Limitations
+
+- Delete is still handled through a GET route instead of a POST form.
+- There are no automated tests yet.
+- The UI is functional but still minimal.
 
 ## Future Improvements
 
-- Improve form validation and error messages
-- Convert delete to a POST-based form for safer record removal
-- Add styling for a better user experience
-- Add tests for routes and database logic
+- Move delete actions to POST with CSRF protection
+- Improve styling and layout
+- Add stronger validation messages
+- Add automated tests for routes and database behavior
+- Add search and filtering for student records
