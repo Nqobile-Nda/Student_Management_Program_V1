@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, get_flashed_messages, redirect, url_for, abort
+from flask import Flask, render_template, request, flash, get_flashed_messages, redirect, url_for, abort, jsonify
 from models.students import students_table, load_students, create_student, update_student_details, delete_student
 import os
 from dotenv import load_dotenv
@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY")
 
+
 subject_options = ["English", "Mathematics", "Afrikaans", "Life Orientation", "Physical Education", "Natural Sciences", "Social Sciences"]
 
 students_table()
@@ -20,7 +21,8 @@ def format_subjects(subjects):
     return ", ".join(cleaned_subjects)
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
+@app.route("/student/add", methods=["GET", "POST"])
 def add_student_route():
     students = load_students()
 
@@ -39,10 +41,10 @@ def add_student_route():
         else: 
             flash(f"Invalid input", "error")
 
-    return render_template("add_student.html", students=students, subject_options=subject_options)
+    return render_template("add_student.html", jsonify(students=students, subject_options=subject_options))
 
 
-@app.route("/edit/student/<int:student_id>", methods=["GET", "POST"])
+@app.route("/student/edit/<int:student_id>", methods=["GET", "POST"])
 def edit_student_details_route(student_id):
     
     students = load_students()
@@ -68,7 +70,7 @@ def edit_student_details_route(student_id):
     return render_template('edit_student.html', student=student, selected_subjects=selected_subjects, subject_options=subject_options)
 
 
-@app.route("/delete/student/<int:student_id>")
+@app.route("/student/delete/<int:student_id>")
 def delete_student_route(student_id):
     students = load_students()
     student = next((item for item in students if item.get("student_id") == student_id), None)
