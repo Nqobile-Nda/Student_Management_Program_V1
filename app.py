@@ -10,7 +10,15 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY")
 
+subject_options = ["English", "Mathematics", "Afrikaans", "Life Orientation", "Physical Education", "Natural Sciences", "Social Sciences"]
+
 students_table()
+
+
+def format_subjects(subjects):
+    cleaned_subjects = [subject.strip() for subject in subjects if subject.strip()]
+    return ", ".join(cleaned_subjects)
+
 
 @app.route("/", methods=["GET", "POST"])
 def add_student_route():
@@ -20,7 +28,7 @@ def add_student_route():
         student_name = request.form.get("student_name", "")
         student_date_of_birth = request.form.get("student_date_of_birth", "")
         student_grade =  request.form.get("student_grade", "")
-        student_subjects = request.form.get("student_subjects")
+        student_subjects = format_subjects(request.form.getlist("student_subjects"))
         created_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
         if student_name and student_date_of_birth and student_grade and student_subjects:
@@ -31,7 +39,7 @@ def add_student_route():
         else: 
             flash(f"Invalid input", "error")
 
-    return render_template("add_student.html", students=students)
+    return render_template("add_student.html", students=students, subject_options=subject_options)
 
 
 @app.route("/edit/student/<int:student_id>", methods=["GET", "POST"])
@@ -47,7 +55,7 @@ def edit_student_details_route(student_id):
         name = request.form.get("student_name", "")
         date_of_birth = request.form.get("date_of_birth", "")
         grade = request.form.get("grade", "")
-        subjects = request.form.get("subjects", "")
+        subjects = format_subjects(request.form.getlist("subjects"))
 
         if name and date_of_birth and grade and subjects:
             update_student_details(name, date_of_birth, grade, subjects, student_id)
@@ -56,7 +64,8 @@ def edit_student_details_route(student_id):
         
         else: 
             flash('Invalid Input!', 'error')
-    return render_template('edit_student.html', student=student)
+    selected_subjects = [subject.strip() for subject in student["subjects"].split(",") if subject.strip()]
+    return render_template('edit_student.html', student=student, selected_subjects=selected_subjects, subject_options=subject_options)
 
 
 @app.route("/delete/student/<int:student_id>")
