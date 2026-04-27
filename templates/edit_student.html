@@ -16,7 +16,12 @@
     <input name="grade" value="{{ student.grade }}" title="grade"><br/>
 
     <label>Subjects:</label>
-    <input name="subjects" value="{{ student.subjects }}" title="subjects"><br/>
+    <select name="subjects" title="subjects" multiple required>
+        {% for subject in subject_options %}
+        <option value="{{ subject }}" {% if subject in selected_subjects %}selected{% endif %}>{{ subject }}</option>
+        {% endfor %}
+    </select>
+    <br/>
 
     <label>Created At:</label>
     <input value="{{ student.created_at }}" title="created_at"><br/>

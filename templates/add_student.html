@@ -3,27 +3,27 @@
 {% block content %}
 
 <form method="POST">
-    <label>Name:</label>
-    <input type="text" name="student_name" title="student_name">
+    <label>Name:</label><br/>
+    <input type="text" name="student_name" title="student_name"><br/>
     
-    <label>Date Of Birth:</label>
-    <input type="date" name="student_date_of_birth" title="student_date-of_birth">
+    <label>Date Of Birth:</label><br/>
+    <input type="date" name="student_date_of_birth" title="student_date-of_birth"><br/>
 
-    <label>Grade:</label>
-    <input type="number" name="student_grade" title="student_grade">
+    <label>Grade:</label><br/>
+    <input type="number" name="student_grade" title="student_grade"><br/>
 
-    <label>Subjects</label>
-    <select name="student_subjects" title="student_subjects" required>
-        <option value="" selected disabled>Select Subjects</option>
-        <option>English</option>
-        <option>Mathematics</option>
-        <option>Afrikaans</option>
-        <option>Life Orientation</option>
-    </select>
+    <label>Subjects</label><br/>
+    <select name="student_subjects" title="student_subjects" multiple required>
+        {% for subject in subject_options %}
+        <option value="{{ subject }}">{{ subject }}</option>
+        {% endfor %}
+    </select><br/>
     <button type="submit">Add Student</button>
 </form>
 
-<table border="1px">
+
+<div class="student-table">
+<table>
     <thead>
         <td>ID</td>
         <td>Name</td>
@@ -31,8 +31,7 @@
         <td>Grade</td>
         <td>Subjects</td>
         <td>Created At</td>
-        <td>Edit</td>
-        <td>Delete</td>
+        <td colspan="2">Action</td>
     </thead>
     <tbody>
         {% for student in students %}
@@ -49,5 +48,6 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 
 {% endblock %}
