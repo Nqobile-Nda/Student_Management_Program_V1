@@ -24,12 +24,10 @@ def format_subjects(subjects):
 @app.route("/")
 @app.route("/student/add", methods=["GET", "POST"])
 def add_student_route():
-    students = load_students()
-
     if request.method == "POST":
         student_name = request.form.get("student_name", "")
         student_date_of_birth = request.form.get("student_date_of_birth", "")
-        student_grade =  request.form.get("student_grade", "")
+        student_grade = request.form.get("student_grade", "")
         student_subjects = format_subjects(request.form.getlist("student_subjects"))
         created_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -37,15 +35,21 @@ def add_student_route():
             flash(f"{student_name} has been added.", "success")
             create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
             return redirect(url_for("add_student_route"))
-        
-        else: 
-            flash(f"Invalid input", "error")
 
-    return render_template("add_student.html", jsonify(students=students, subject_options=subject_options))
+        flash("Invalid input", "error")
+
+    return render_template("add_student.html", subject_options=subject_options)
+
+
+@app.route("/api/students", methods=["GET"])
+def students():
+    students = load_students()
+    
+    return jsonify(students)
 
 
 @app.route("/student/edit/<int:student_id>", methods=["GET", "POST"])
-def edit_student_details_route(student_id):
+def edit_student_route(student_id):
     
     students = load_students()
     student = next((item for item in students if item.get("student_id") == student_id), None)
@@ -62,11 +66,12 @@ def edit_student_details_route(student_id):
         if name and date_of_birth and grade and subjects:
             update_student_details(name, date_of_birth, grade, subjects, student_id)
             flash('Successfully updated.', 'success')
-            return redirect(url_for('edit_student_details_route', student_id=student_id))
+            return redirect(url_for('edit_student_route', student_id=student_id))
         
         else: 
             flash('Invalid Input!', 'error')
     selected_subjects = [subject.strip() for subject in student["subjects"].split(",") if subject.strip()]
+
     return render_template('edit_student.html', student=student, selected_subjects=selected_subjects, subject_options=subject_options)
 
 
@@ -80,6 +85,7 @@ def delete_student_route(student_id):
 
     delete_student(student_id)
     flash(f'{student["name"]} successfully deleted', 'success')
+
     return redirect(url_for('add_student_route'))
 
 if __name__ == "__main__":
