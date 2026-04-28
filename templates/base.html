@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<nav class="navbar">
+    <a href="{{ url_for('home_page') }}">Home</a>
+    <a href="{{ url_for('students_page') }}">Students</a>
+    <a href="{{ url_for('add_student_page') }}">Add Students</a>
+</nav>
+
 {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
         {% for category, message in messages %}
