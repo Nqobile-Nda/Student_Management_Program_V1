@@ -9,6 +9,26 @@ body, body a {
 }
 
 
+.navbar {
+    align-items: center;
+    padding: 14px 20px;
+    background-color: black;
+}
+
+
+.navbar a {
+    color: white;
+    font-weight: 600;
+    margin: 0 10px;
+    background-color: black;
+}
+
+
+.navbar a:hover {
+    color: #dbeafe;
+}
+
+
 .flash-container {
     padding: 8px;
     border-radius: 6px;
@@ -35,12 +55,30 @@ main {
 }
 
 
-.student-table table, td{
+.add-student-form {
+    background-color: white;
+    padding: 10px;
+    border-radius: 6px;
+    width: fit-content;
+    margin: 20px auto;
+}
+
+
+.student-table {
+    background-color: white;
+    padding: 10px;
+    border-radius: 6px;
+    width: fit-content;
+    margin: 20px auto;
+}
+
+
+.student-table table, td {
     border: 1px solid #282525;
     border-collapse: collapse;
 }
 
 
 .student-table td {
-    padding: 3px;
+    padding: 5px;
 }
