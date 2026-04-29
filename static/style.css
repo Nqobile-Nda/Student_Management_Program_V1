@@ -82,3 +82,34 @@ main {
 .student-table td {
     padding: 5px;
 }
+
+
+#subject-options-display {
+    cursor: pointer;
+}
+
+
+#subject-options-dialog {
+    border: none;
+    border-radius: 8px;
+    padding: 18px;
+    width: min(360px, 90vw);
+}
+
+
+#subject-options-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+
+.subject-option {
+    display: block;
+    margin-bottom: 8px;
+}
+
+
+.dialog-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
