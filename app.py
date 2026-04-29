@@ -20,35 +20,48 @@ def format_subjects(subjects):
     cleaned_subjects = [subject.strip() for subject in subjects if subject.strip()]
     return ", ".join(cleaned_subjects)
 
-
 @app.route("/")
-@app.route("/student/add", methods=["GET", "POST"])
-def add_student_route():
-    if request.method == "POST":
-        student_name = request.form.get("student_name", "")
-        student_date_of_birth = request.form.get("student_date_of_birth", "")
-        student_grade = request.form.get("student_grade", "")
-        student_subjects = format_subjects(request.form.getlist("student_subjects"))
-        created_at = time.strftime("%Y-%m-%d %H:%M:%S")
+@app.route("/home")
+def home_page():
+    return render_template("home.html")
 
-        if student_name and student_date_of_birth and student_grade and student_subjects:
-            flash(f"{student_name} has been added.", "success")
-            create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
-            return redirect(url_for("add_student_route"))
 
-        flash("Invalid input", "error")
-
-    return render_template("add_student.html", subject_options=subject_options)
+@app.route("/students")
+def students_page():
+    return render_template("students.html")
 
 
 @app.route("/api/students", methods=["GET"])
-def students():
+def load_students_route():
     students = load_students()
-    
     return jsonify(students)
 
 
-@app.route("/student/edit/<int:student_id>", methods=["GET", "POST"])
+@app.route("/student/add")
+def add_student_page():
+    return render_template("add_student.html", subject_options=subject_options)
+
+
+@app.route("/api/student/add", methods=["POST"])
+def add_student_route():
+    student_name = request.form.get("student_name", "")
+    student_date_of_birth = request.form.get("student_date_of_birth", "")
+    student_grade = request.form.get("student_grade", "")
+    student_subjects = format_subjects(request.form.getlist("student_subjects"))
+    created_at = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    if student_name and student_date_of_birth and student_grade and student_subjects:
+        flash(f"{student_name} has been added.", "success")
+        create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
+        return redirect(url_for("add_student_page"))
+
+    flash("Invalid input", "error")
+    return redirect(url_for("add_student_page"))
+
+    
+
+
+@app.route("/api/student/edit/<int:student_id>", methods=["GET", "POST"])
 def edit_student_route(student_id):
     
     students = load_students()
@@ -75,7 +88,7 @@ def edit_student_route(student_id):
     return render_template('edit_student.html', student=student, selected_subjects=selected_subjects, subject_options=subject_options)
 
 
-@app.route("/student/delete/<int:student_id>")
+@app.route("/api/student/delete/<int:student_id>", methods=["POST"])
 def delete_student_route(student_id):
     students = load_students()
     student = next((item for item in students if item.get("student_id") == student_id), None)
@@ -86,7 +99,7 @@ def delete_student_route(student_id):
     delete_student(student_id)
     flash(f'{student["name"]} successfully deleted', 'success')
 
-    return redirect(url_for('add_student_route'))
+    return redirect(url_for('students_page'))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
