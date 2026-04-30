@@ -58,8 +58,6 @@ def add_student_route():
     flash("Invalid input", "error")
     return redirect(url_for("add_student_page"))
 
-    
-
 
 @app.route("/api/student/edit/<int:student_id>", methods=["GET", "POST"])
 def edit_student_route(student_id):

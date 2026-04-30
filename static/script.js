@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+    const addStudentForm = document.getElementById("add-student-form");
+    addStudentForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        addStudentForm.reset();
+    })
+
+
     const subjectOptionsDisplay = document.getElementById("subject-options-display");
     const subjectOptionsDialog = document.getElementById("subject-options-dialog");
     const submitSubjectOptions = document.getElementById("submit-subject-options");
