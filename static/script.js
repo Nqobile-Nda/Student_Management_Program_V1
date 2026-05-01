@@ -16,11 +16,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     const addStudentForm = document.getElementById("add-student-form");
+    if (addStudentForm) {
     addStudentForm.addEventListener("submit", (event) => {
         event.preventDefault();
         addStudentForm.reset();
-    })
-
+    });
+    }
 
     const subjectOptionsDisplay = document.getElementById("subject-options-display");
     const subjectOptionsDialog = document.getElementById("subject-options-dialog");
