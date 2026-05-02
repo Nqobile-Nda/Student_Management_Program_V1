@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (addStudentForm) {
     addStudentForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        addStudentForm.reset();
     });
     }
 
