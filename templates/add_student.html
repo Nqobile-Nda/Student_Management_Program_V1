@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="add-student-form">
-<form method="POST" action="{{ url_for('add_student_route') }}" id="add-student-form">
+<form method="POST" action="{{ url_for('add_student_route') }}" id="student-form">
     <label>Name:</label><br/>
     <input type="text" name="student_name" title="student_name"><br/>
     
@@ -14,9 +14,9 @@
     <input type="number" name="student_grade" title="student_grade"><br/>
 
     <label>Subjects</label><br/>
-    <input type="text" title="student_subjects" id="subject-options-display" readonly placeholder="Choose subjects">
+    <input type="text" title="student_subjects" id="subject-display" readonly placeholder="Choose subjects">
 
-    <dialog id="subject-options-dialog">
+    <dialog id="subject-dialog">
         <h3>Select Subjects</h3>
         {% for subject in subject_options %}
         <label class="subject-option">
@@ -26,8 +26,8 @@
         {% endfor %}
 
         <div class="dialog-actions">
-            <button type="button" id="submit-subject-options">Confirm</button>
-            <button type="button" id="close-subject-options">Close</button>
+            <button type="button" id="modal-confirm-subjects-btn">Confirm</button>
+            <button type="button" id="modal-close-subjects-btn">Close</button>
         </div>
     </dialog>
 

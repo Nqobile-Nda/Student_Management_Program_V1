@@ -49,19 +49,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    const addStudentForm = document.getElementById("add-student-form");
-    if (addStudentForm) {
+    const studentForm = document.getElementById("student-form");
+    if (studentForm) {
  
-        const subjectOptionsDisplay = document.getElementById("subject-options-display");
-        const subjectOptionsDialog = document.getElementById("subject-options-dialog");
-        const submitSubjectOptions = document.getElementById("submit-subject-options");
-        const closeSubjectOptions = document.getElementById("close-subject-options");
+        const subjectDisplay = document.getElementById("subject-display");
+        const subjectDialog = document.getElementById("subject-dialog");
+        const modalConfirmSubjectsBtn = document.getElementById("modal-confirm-subjects-btn");
+        const modalCloseSubjectsBtn = document.getElementById("modal-close-subjects-btn");
 
         if (
-            subjectOptionsDisplay &&
-            subjectOptionsDialog &&
-            submitSubjectOptions &&
-            closeSubjectOptions
+            subjectDisplay &&
+            subjectDialog &&
+            modalConfirmSubjectsBtn &&
+            modalCloseSubjectsBtn
         ) {
             const subjects = document.querySelectorAll('[name="student_subjects"]');
 
@@ -72,23 +72,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return selectedSubjects;
             }
 
-            subjectOptionsDisplay.addEventListener("click", () => {
-                subjectOptionsDialog.showModal();
+            subjectDisplay.addEventListener("click", () => {
+                subjectDialog.showModal();
             });
 
-            submitSubjectOptions.addEventListener("click", () => {
+            modalConfirmSubjectsBtn.addEventListener("click", () => {
 
                 const selected = selectedSubjects();
-                subjectOptionsDisplay.value = selected.join(", ");
-                subjectOptionsDialog.close();
+                subjectDisplay.value = selected.join(", ");
+                subjectDialog.close();
             });
 
-            closeSubjectOptions.addEventListener("click", () => {
-                subjectOptionsDialog.close();
-            });
-
-            subjectCheckboxes.forEach((checkbox) => {
-                checkbox.addEventListener("change", updateSubjectDisplay);
+            modalCloseSubjectsBtn.addEventListener("click", () => {
+                subjectDialog.close();
             });
         }
     }
