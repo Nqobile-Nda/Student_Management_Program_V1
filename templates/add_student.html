@@ -3,18 +3,23 @@
 {% block content %}
 
 <div class="add-student-form">
-<form method="POST" action="{{ url_for('add_student_route') }}" id="student-form">
-    <label>Name:</label><br/>
-    <input type="text" name="student_name" title="student_name"><br/>
-    
-    <label>Date Of Birth:</label><br/>
-    <input type="date" name="student_date_of_birth" title="student_date-of_birth"><br/>
+    <form method="POST" action="{{ url_for('add_student_route') }}" id="student-form">
+        <label>Name:</label><br/>
+        <input type="text" name="student_name" title="student_name"><br/>
+        
+        <label>Date Of Birth:</label><br/>
+        <input type="date" name="student_date_of_birth" title="student_date-of_birth"><br/>
 
-    <label>Grade:</label><br/>
-    <input type="number" name="student_grade" title="student_grade"><br/>
+        <label>Grade:</label><br/>
+        <input type="number" name="student_grade" title="student_grade"><br/>
 
-    <label>Subjects</label><br/>
-    <input type="text" title="student_subjects" id="subject-display" readonly placeholder="Choose subjects">
+        <label>Subjects</label><br/>
+        <input type="text" title="student_subjects" id="subject-display" readonly placeholder="Choose subjects">
+
+        <br/>
+        <button type="submit">Add Student</button>
+    </form>
+</div>
 
     <dialog id="subject-dialog">
         <h3>Select Subjects</h3>
@@ -30,11 +35,6 @@
             <button type="button" id="modal-close-subjects-btn">Close</button>
         </div>
     </dialog>
-
-    <br/>
-    <button type="submit">Add Student</button>
-</form>
-</div>
 
 
 {% endblock %}
