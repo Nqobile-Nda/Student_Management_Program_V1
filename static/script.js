@@ -14,38 +14,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         return students;
     }
 
-    const studentsTableBody = document.getElementById("students-table-body");
-    const studentCount = document.getElementById("student-count");
+    async function renderStudents() {
+        const studentsTableBody = document.getElementById("students-table-body");
+        const studentCount = document.getElementById("student-count");
 
-    if (studentCount && studentsTableBody) {
-        const students = await loadStudents();
-        studentCount.innerHTML = `Students(${students.length})`
+        if (studentCount && studentsTableBody) {
+            const students = await loadStudents();
+            studentCount.innerHTML = `Students(${students.length})`
 
-        if (!students.length) {
-            studentsTableBody.innerHTML = `
-            <tr>
-                <td colspan="8">No students added.</td>
-            </tr>
-            `;
-            return;
+            if (!students.length) {
+                studentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="8">No students added.</td>
+                </tr>
+                `;
+                return;
+            }
+
+            studentsTableBody.innerHTML = students.map((student) => `
+                <tr>
+                    <td>${student.student_id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.date_of_birth}</td>
+                    <td>${student.grade}</td>
+                    <td>${student.subjects}</td>
+                    <td>${student.created_at}</td>
+                    <td><a href="/api/student/edit/${student.student_id}">Edit</a></td>
+                    <td>
+                        <form method="POST" action="/api/student/delete/${student.student_id}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            `).join("");
         }
-
-        studentsTableBody.innerHTML = students.map((student) => `
-            <tr>
-                <td>${student.student_id}</td>
-                <td>${student.name}</td>
-                <td>${student.date_of_birth}</td>
-                <td>${student.grade}</td>
-                <td>${student.subjects}</td>
-                <td>${student.created_at}</td>
-                <td><a href="/api/student/edit/${student.student_id}">Edit</a></td>
-                <td>
-                    <form method="POST" action="/api/student/delete/${student.student_id}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        `).join("");
     }
 
 
@@ -86,6 +88,34 @@ document.addEventListener("DOMContentLoaded", async () => {
             modalCloseSubjectsBtn.addEventListener("click", () => {
                 subjectDialog.close();
             });
+
+            async function addStudent() {
+                const data = {
+                    student_name: studentForm.student_name.value,
+                    student_date_of_birth: studentForm.student_date_of_birth.value,
+                    student_grade: studentForm.student_grade.value,
+                    student_subjects: selectedSubjects()
+                };
+
+                const response = await fetch("/api/add_student", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response;
+            };
+
+            studentForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                await addStudent();
+                
+                studentForm.reset();
+                await renderStudents();
+            });
         }
     }
+    await renderStudents();
 });

@@ -3,6 +3,7 @@ from models.students import students_table, load_students, create_student, updat
 import os
 from dotenv import load_dotenv
 import time
+import json
 
 load_dotenv()
 
@@ -37,18 +38,20 @@ def load_students_route():
     return jsonify(students)
 
 
-@app.route("/student/add")
+@app.route("/add_student")
 def add_student_page():
     return render_template("add_student.html", subject_options=subject_options)
 
 
-@app.route("/api/student/add", methods=["POST"])
+@app.route("/api/add_student", methods=["POST"])
 def add_student_route():
-    student_name = request.form.get("student_name", "")
-    student_date_of_birth = request.form.get("student_date_of_birth", "")
-    student_grade = request.form.get("student_grade", "")
-    student_subjects = format_subjects(request.form.getlist("student_subjects"))
-    created_at = time.strftime("%Y-%m-%d %H:%M:%S")
+    data = request.get_json()
+
+    student_name = data.get("student_name")
+    student_date_of_birth = data.get("student_date_of_birth")
+    student_grade = data.get("student_grade")
+    student_subjects = json.dumps(data.get("student_subjects"))
+    created_at = time.strftime("%Y-%m-%d %H:%M:S")
 
     if student_name and student_date_of_birth and student_grade and student_subjects:
         flash(f"{student_name} has been added.", "success")
