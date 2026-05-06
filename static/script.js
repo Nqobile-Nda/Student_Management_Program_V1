@@ -14,54 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return students;
     }
 
-
-    const addStudentForm = document.getElementById("add-student-form");
-    if (addStudentForm) {
-    addStudentForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-    });
-    }
-
-    const subjectOptionsDisplay = document.getElementById("subject-options-display");
-    const subjectOptionsDialog = document.getElementById("subject-options-dialog");
-    const submitSubjectOptions = document.getElementById("submit-subject-options");
-    const closeSubjectOptions = document.getElementById("close-subject-options");
-
-    if (
-        subjectOptionsDisplay &&
-        subjectOptionsDialog &&
-        submitSubjectOptions &&
-        closeSubjectOptions
-    ) {
-        const subjectCheckboxes = subjectOptionsDialog.querySelectorAll('input[name="student_subjects"]');
-
-        function updateSubjectDisplay() {
-            const selectedSubjects = Array.from(subjectCheckboxes)
-                .filter((checkbox) => checkbox.checked)
-                .map((checkbox) => checkbox.value);
-
-            subjectOptionsDisplay.value = selectedSubjects.join(", ");
-        }
-
-        subjectOptionsDisplay.addEventListener("click", () => {
-            subjectOptionsDialog.showModal();
-        });
-
-        submitSubjectOptions.addEventListener("click", () => {
-            updateSubjectDisplay();
-            subjectOptionsDialog.close();
-        });
-
-        closeSubjectOptions.addEventListener("click", () => {
-            subjectOptionsDialog.close();
-        });
-
-        subjectCheckboxes.forEach((checkbox) => {
-            checkbox.addEventListener("change", updateSubjectDisplay);
-        });
-    }
-
-
     const studentsTableBody = document.getElementById("students-table-body");
     const studentCount = document.getElementById("student-count");
 
@@ -96,4 +48,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         `).join("");
     }
 
+
+    const addStudentForm = document.getElementById("add-student-form");
+    if (addStudentForm) {
+ 
+        const subjectOptionsDisplay = document.getElementById("subject-options-display");
+        const subjectOptionsDialog = document.getElementById("subject-options-dialog");
+        const submitSubjectOptions = document.getElementById("submit-subject-options");
+        const closeSubjectOptions = document.getElementById("close-subject-options");
+
+        if (
+            subjectOptionsDisplay &&
+            subjectOptionsDialog &&
+            submitSubjectOptions &&
+            closeSubjectOptions
+        ) {
+            const subjects = document.querySelectorAll('[name="student_subjects"]');
+
+            function selectedSubjects() {
+                const selectedSubjects = Array.from(subjects)
+                    .filter((checkbox) => checkbox.checked)
+                    .map((checkbox) => checkbox.value);
+                return selectedSubjects;
+            }
+
+            subjectOptionsDisplay.addEventListener("click", () => {
+                subjectOptionsDialog.showModal();
+            });
+
+            submitSubjectOptions.addEventListener("click", () => {
+
+                const selected = selectedSubjects();
+                subjectOptionsDisplay.value = selected.join(", ");
+                subjectOptionsDialog.close();
+            });
+
+            closeSubjectOptions.addEventListener("click", () => {
+                subjectOptionsDialog.close();
+            });
+
+            subjectCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener("change", updateSubjectDisplay);
+            });
+        }
+    }
 });
