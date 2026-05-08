@@ -51,15 +51,14 @@ def add_student_route():
     student_date_of_birth = data.get("student_date_of_birth")
     student_grade = data.get("student_grade")
     student_subjects = json.dumps(data.get("student_subjects"))
-    created_at = time.strftime("%Y-%m-%d %H:%M:S")
+    created_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    if student_name and student_date_of_birth and student_grade and student_subjects:
+    if student_name and student_date_of_birth and student_grade:
         flash(f"{student_name} has been added.", "success")
         create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
-        return redirect(url_for("add_student_page"))
-
-    flash("Invalid input", "error")
-    return redirect(url_for("add_student_page"))
+        return jsonify({"message": "Student added successfully."}), 201
+    
+    return jsonify({"error": "Failed to add student"})
 
 
 @app.route("/api/student/edit/<int:student_id>", methods=["GET", "POST"])
