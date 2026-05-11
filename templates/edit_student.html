@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" id="edit-student-form">
     <label>Student ID:</label>
     <input value="{{ student.student_id }}" title="student_id" readonly><br/>
 
@@ -16,17 +16,28 @@
     <input name="grade" value="{{ student.grade }}" title="grade"><br/>
 
     <label>Subjects:</label>
-    <select name="subjects" title="subjects" multiple required>
-        {% for subject in subject_options %}
-        <option value="{{ subject }}" {% if subject in selected_subjects %}selected{% endif %}>{{ subject }}</option>
-        {% endfor %}
-    </select>
+    <input id="edit-subject-display" title="edit-subject-display" readonly placeholder="Choose subjects">
     <br/>
 
     <label>Created At:</label>
-    <input value="{{ student.created_at }}" title="created_at"><br/>
+    <input value="{{ student.created_at }}" title="created_at" readonly><br/>
 
     <button type="submit">Update</button>
 </form>
+
+<dialog id="edit-student-subject-modal">
+    <h3>Select Subjects</h3>
+    {% for subject in subject_options %}
+    <label class="subject-option">
+        <input type="checkbox" name="subjects" value="{{ subject }}" form="edit-student-form" {% if subject in selected_subjects %}checked{% endif %}>
+        {{ subject }}
+    </label>
+    {% endfor %}
+
+    <div class="dialog-actions">
+        <button type="button" id="edit-modal-confirm-subjects-btn">Confirm</button>
+        <button type="button" id="edit-modal-close-subjects-btn">Close</button>
+    </div>
+</dialog>
 
 {% endblock %}
