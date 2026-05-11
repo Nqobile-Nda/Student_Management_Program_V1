@@ -17,9 +17,24 @@ subject_options = ["English", "Mathematics", "Afrikaans", "Life Orientation", "P
 students_table()
 
 
-def format_subjects(subjects):
-    cleaned_subjects = [subject.strip() for subject in subjects if subject.strip()]
-    return ", ".join(cleaned_subjects)
+def serialize_subjects(subjects):
+    return json.dumps([subject.strip() for subject in subjects if subject.strip()])
+
+
+def deserialize_subjects(subjects):
+    try:
+        parsed_subjects = json.loads(subjects)
+    except (TypeError, json.JSONDecodeError):
+        parsed_subjects = subjects
+
+    if isinstance(parsed_subjects, list):
+        return [subject.strip() for subject in parsed_subjects if subject.strip()]
+
+    if isinstance(parsed_subjects, str):
+        return [subject.strip() for subject in parsed_subjects.split(",") if subject.strip()]
+
+    return []
+
 
 @app.route("/")
 @app.route("/home")
@@ -50,10 +65,10 @@ def add_student_route():
     student_name = data.get("student_name")
     student_date_of_birth = data.get("student_date_of_birth")
     student_grade = data.get("student_grade")
-    student_subjects = json.dumps(data.get("student_subjects"))
+    student_subjects = serialize_subjects(data.get("student_subjects", []))
     created_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    if student_name and student_date_of_birth and student_grade:
+    if student_name and student_date_of_birth and student_grade and deserialize_subjects(student_subjects):
         flash(f"{student_name} has been added.", "success")
         create_student(student_name, student_date_of_birth, student_grade, student_subjects, created_at)
         return jsonify({"message": "Student added successfully."}), 201
@@ -74,16 +89,16 @@ def edit_student_route(student_id):
         name = request.form.get("student_name", "")
         date_of_birth = request.form.get("date_of_birth", "")
         grade = request.form.get("grade", "")
-        subjects = format_subjects(request.form.getlist("subjects"))
+        subjects = serialize_subjects(request.form.getlist("subjects"))
 
-        if name and date_of_birth and grade and subjects:
+        if name and date_of_birth and grade and deserialize_subjects(subjects):
             update_student_details(name, date_of_birth, grade, subjects, student_id)
             flash('Successfully updated.', 'success')
             return redirect(url_for('edit_student_route', student_id=student_id))
         
         else: 
             flash('Invalid Input!', 'error')
-    selected_subjects = [subject.strip() for subject in student["subjects"].split(",") if subject.strip()]
+    selected_subjects = deserialize_subjects(student["subjects"])
 
     return render_template('edit_student.html', student=student, selected_subjects=selected_subjects, subject_options=subject_options)
 
