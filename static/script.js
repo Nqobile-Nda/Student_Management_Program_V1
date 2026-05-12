@@ -1,12 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const flashContainer = document.getElementById("flash-container");
-
-    if (flashContainer) {
-        setTimeout(() => {
-            flashContainer.style.display = "none";
-        }, 3000);
-    }
-
 
     async function loadStudents() {
         const response = await fetch('/api/students');
@@ -14,6 +6,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         return students;
     }
 
+
+    async function loadStudent(studentId) {
+        const response = await fetch(`/api/student/edit/${studentId}`);
+        const student = await response.json();
+        return student;
+    }
+
+    function parseSubjects(subjects) {
+        if (Array.isArray(subjects)) {
+            return subjects;
+        }
+
+        try {
+            return JSON.parse(subjects);
+        } catch {
+            return subjects ? subjects.split(",").map((subject) => subject.trim()) : [];
+        }
+    }
+
+    
     async function renderStudents() {
         const studentsTableBody = document.getElementById("students-table-body");
         const studentCount = document.getElementById("student-count");
@@ -37,9 +49,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <td>${student.name}</td>
                     <td>${student.date_of_birth}</td>
                     <td>${student.grade}</td>
-                    <td>${student.subjects}</td>
+                    <td>${parseSubjects(student.subjects).join(", ")}</td>
                     <td>${student.created_at}</td>
-                    <td><a href="/api/student/edit/${student.student_id}">Edit</a></td>
+                    <td><a href="/student/edit/${student.student_id}">Edit</a></td>
                     <td>
                         <form method="POST" action="/api/student/delete/${student.student_id}">
                             <button type="submit">Delete</button>
@@ -59,12 +71,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const modalConfirmSubjectsBtn = document.getElementById("modal-confirm-subjects-btn");
         const modalCloseSubjectsBtn = document.getElementById("modal-close-subjects-btn");
 
-        if (
-            subjectDisplay &&
-            subjectDialog &&
-            modalConfirmSubjectsBtn &&
-            modalCloseSubjectsBtn
-        ) {
+        if (subjectDisplay && subjectDialog && modalConfirmSubjectsBtn && modalCloseSubjectsBtn) {
+
             const subjects = document.querySelectorAll('[name="student_subjects"]');
 
             function selectedSubjects() {
@@ -111,11 +119,80 @@ document.addEventListener("DOMContentLoaded", async () => {
                 event.preventDefault();
 
                 await addStudent();
-                
                 studentForm.reset();
                 await renderStudents();
             });
         }
+    }
+
+
+    const editStudentForm = document.getElementById("edit-student-form");
+    const editSubjectDisplay = document.getElementById("edit-subject-display");
+    const editStudentSubjectModal = document.getElementById("edit-student-subject-modal");
+    const editModalConfirmSubjectsBtn = document.getElementById("edit-modal-confirm-subjects-btn");
+    const editModalCloseSubjectsBtn = document.getElementById("edit-modal-close-subjects-btn");
+ 
+    if (editStudentForm) {   
+        const studentId = editStudentForm.dataset.studentId;
+        const editSubjects = document.querySelectorAll('[name="student_subjects"]');
+
+        function selectedEditedSubjects() {
+            return Array.from(editSubjects)
+                .filter((checkbox) => checkbox.checked)
+                .map((checkbox) => checkbox.value);
+        }
+
+        const student = await loadStudent(studentId);
+        const studentSubjects = parseSubjects(student.subjects);
+
+        editStudentForm.student_id.value = student.student_id;
+        editStudentForm.student_name.value = student.name;
+        editStudentForm.student_date_of_birth.value = student.date_of_birth;
+        editStudentForm.student_grade.value = student.grade;
+        editStudentForm.created_at.value = student.created_at;
+        editSubjectDisplay.value = studentSubjects.join(", ");
+
+        editSubjects.forEach((checkbox) => {
+            checkbox.checked = studentSubjects.includes(checkbox.value);
+        });
+        
+        editSubjectDisplay.addEventListener("click", () => {
+            editStudentSubjectModal.showModal();
+        });
+
+        editModalConfirmSubjectsBtn.addEventListener("click", () => {
+            const selected = selectedEditedSubjects();
+
+            editSubjectDisplay.value = selected.join(", ");
+            editStudentSubjectModal.close();
+        });
+
+        editModalCloseSubjectsBtn.addEventListener("click", () => {
+            editStudentSubjectModal.close();
+        });
+
+        editStudentForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const data = {
+                student_name: editStudentForm.student_name.value,
+                student_date_of_birth: editStudentForm.student_date_of_birth.value,
+                student_grade: editStudentForm.student_grade.value,
+                student_subjects: selectedEditedSubjects()
+            };
+
+            const response = await fetch(`/api/student/edit/${studentId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                window.location.href = "/students";
+            }
+        });
     }
     await renderStudents();
 });
