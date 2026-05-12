@@ -2,25 +2,24 @@
 
 {% block content %}
 
-<form method="POST" id="edit-student-form">
+<form method="POST" id="edit-student-form" data-student-id="{{ student_id }}">
     <label>Student ID:</label>
-    <input value="{{ student.student_id }}" title="student_id" readonly><br/>
+    <input name="student_id" title="student_id" readonly><br/>
 
     <label>Name:</label>
-    <input name="student_name" value="{{ student.name }}" title="name"><br/>
+    <input name="student_name" title="name"><br/>
 
     <label>Date Of Birth:</label>
-    <input name="date_of_birth" type="date" value="{{ student.date_of_birth }}" title="date_of_birth"><br/>
+    <input name="student_date_of_birth" type="date" title="date_of_birth"><br/>
 
     <label>Grade:</label>
-    <input name="grade" value="{{ student.grade }}" title="grade"><br/>
+    <input name="student_grade" title="grade"><br/>
 
     <label>Subjects:</label>
-    <input id="edit-subject-display" title="edit-subject-display" readonly placeholder="Choose subjects">
-    <br/>
+    <input id="edit-subject-display" title="edit-subject-display" readonly placeholder="Choose subjects"><br/>
 
     <label>Created At:</label>
-    <input value="{{ student.created_at }}" title="created_at" readonly><br/>
+    <input name="created_at" title="created_at" readonly><br/>
 
     <button type="submit">Update</button>
 </form>
@@ -29,7 +28,7 @@
     <h3>Select Subjects</h3>
     {% for subject in subject_options %}
     <label class="subject-option">
-        <input type="checkbox" name="subjects" value="{{ subject }}" form="edit-student-form" {% if subject in selected_subjects %}checked{% endif %}>
+        <input type="checkbox" name="student_subjects" value="{{ subject }}" form="edit-student-form">
         {{ subject }}
     </label>
     {% endfor %}
