@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{% for subject in subject_options %}
+    <div class="subject-card">
+        <p id="subject-name">{{ subject }}</p>
+        <p></p>
+    </div>
+{% endfor %}
+
+{% endblock %}

@@ -128,5 +128,14 @@ def delete_student_route(student_id):
 
     return redirect(url_for('students_page'))
 
+
+@app.route("/subjects")
+def subjects_page():
+    students = load_students()
+    return render_template("subjects.html", subject_options=subject_options)
+
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
