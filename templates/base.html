@@ -12,18 +12,8 @@
     <a href="{{ url_for('home_page') }}">Home</a>
     <a href="{{ url_for('students_page') }}">Students</a>
     <a href="{{ url_for('add_student_page') }}">Add Students</a>
-    <a >Subjects</a>
+    <a href="{{ url_for('subjects_page') }}">Subjects</a>
 </nav>
-
-{% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        {% for category, message in messages %}
-        <div class="flash-container {{ category }}" id="flash-container">
-            <p>{{ message }}</p>
-        </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
 
 <main>{% block content %}{% endblock %}</main>
 
