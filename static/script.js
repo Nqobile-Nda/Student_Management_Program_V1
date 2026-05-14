@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return student;
     }
 
+
     function parseSubjects(subjects) {
-        return JSON.parse(subjects)
+        return JSON.parse(subjects);
     }
 
     
@@ -184,6 +185,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (response.ok) {
                 window.location.href = "/students";
             }
+        });
+    }
+
+    const addSubjectButton = document.getElementById("add-subject-button");
+
+    if (addSubjectButton) {
+        addSubjectButton.addEventListener("click", () => {
+            window.location.href = "/add_subject";
+        });
+    }
+
+    const addSubjectForm = document.getElementById("add-subject-form");
+    const subjectNames = document.querySelector("[name='subject_input']");
+
+    if (addSubjectForm) {
+        addSubjectForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const data = {
+                "subject": addSubjectForm.subject_input.value
+            };
+
+            const response = await fetch("/api/add_subject", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
         });
     }
     await renderStudents();
