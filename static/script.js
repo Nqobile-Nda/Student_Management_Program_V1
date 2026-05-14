@@ -14,15 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function parseSubjects(subjects) {
-        if (Array.isArray(subjects)) {
-            return subjects;
-        }
-
-        try {
-            return JSON.parse(subjects);
-        } catch {
-            return subjects ? subjects.split(",").map((subject) => subject.trim()) : [];
-        }
+        return JSON.parse(subjects)
     }
 
     
