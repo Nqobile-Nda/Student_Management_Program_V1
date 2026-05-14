@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, flash, get_flashed_messages, redirect, url_for, abort, jsonify
 from models.students import students_table, load_students, create_student, update_student_details, delete_student
+from models.subjects import subjects_table, add_subject, load_subjects
+from models.grade import grade_table
 import os
 from dotenv import load_dotenv
 import time
@@ -12,9 +14,9 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 
 
-subject_options = ["English", "Mathematics", "Afrikaans", "Life Orientation", "Physical Education", "Natural Sciences", "Social Sciences"]
-
 students_table()
+subjects_table()
+grade_table()
 
 
 def serialize_subjects(subjects):
@@ -55,6 +57,7 @@ def load_students_route():
 
 @app.route("/add_student")
 def add_student_page():
+    subject_options = load_subjects()
     return render_template("add_student.html", subject_options=subject_options)
 
 
@@ -78,6 +81,7 @@ def add_student_route():
 @app.route("/student/edit/<int:student_id>", methods=["GET"])
 def edit_student_page(student_id):
     students = load_students()
+    subject_options = load_subjects()
     student = next((student for student in students if student.get("student_id") == student_id), None)
 
     if student is None:
@@ -131,10 +135,22 @@ def delete_student_route(student_id):
 
 @app.route("/subjects")
 def subjects_page():
-    students = load_students()
+    subject_options = load_subjects()
     return render_template("subjects.html", subject_options=subject_options)
 
 
+@app.route("/add_subject")
+def add_subject_page():
+    return render_template("add_subject.html")
+
+
+@app.route("/api/add_subject", methods=["POST"])
+def add_subject_route():
+    data = request.get_json()
+
+    subject = data.get("subject")
+    add_subject(subject)
+    return jsonify({"message": "Subject added successfully"})
 
 
 if __name__ == "__main__":

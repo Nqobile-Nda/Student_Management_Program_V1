@@ -2,11 +2,11 @@
 
 {% block content %}
 
+<button type="button" id="add-subject-button">Add Subject</button>
 
 {% for subject in subject_options %}
     <div class="subject-card">
-        <p id="subject-name">{{ subject }}</p>
-        <p></p>
+        <p class="subject-name">{{ subject.subject_name }}</p>
     </div>
 {% endfor %}
 
