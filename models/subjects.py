@@ -12,7 +12,8 @@ def subjects_table():
     cur.execute("""
     CREATE TABLE IF NOT EXISTS subjects_table (
     subject_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    subject_name TEXT NOT NULL
+    subject_name TEXT NOT NULL,
+    subject_student_count TEXT NOT NULL
     );
     """)
 
